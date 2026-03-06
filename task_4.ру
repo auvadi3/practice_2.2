@@ -1,0 +1,57 @@
+import requests
+
+def user_profile():
+    username = input("Введите username: ")
+
+    url = "https://api.github.com/users/" + username
+    r = requests.get(url)
+    data = r.json()
+
+    print("Имя:", data["name"])
+    print("Профиль:", data["html_url"])
+    print("Репозитории:", data["public_repos"])
+    print("Подписки:", data["following"])
+    print("Подписчики:", data["followers"])
+
+def user_repos():
+    username = input("Введите username: ")
+
+    url = "https://api.github.com/users/" + username + "/repos"
+    r = requests.get(url)
+    repos = r.json()
+
+    for repo in repos:
+        print("\nНазвание:", repo["name"])
+        print("Ссылка:", repo["html_url"])
+        print("Язык:", repo["language"])
+        print("Видимость:", "private" if repo["private"] else "public")
+        print("Ветка:", repo["default_branch"])
+
+def search_repo():
+    name = input("Название репозитория: ")
+
+    url = "https://api.github.com/search/repositories?q=" + name
+    r = requests.get(url)
+    data = r.json()
+
+    for repo in data["items"][:5]:
+        print("\nНазвание:", repo["name"])
+        print("Ссылка:", repo["html_url"])
+        print("Язык:", repo["language"])
+
+while True:
+    print("\n1 - Профиль пользователя")
+    print("2 - Репозитории пользователя")
+    print("3 - Поиск репозитория")
+    print("0 - Выход")
+
+    choice = input("Выберите: ")
+
+    if choice == "1":
+        user_profile()
+    elif choice == "2":
+        user_repos()
+    elif choice == "3":
+        search_repo()
+    elif choice == "0":
+        break
