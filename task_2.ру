@@ -1,0 +1,12 @@
+import psutil
+
+print("Системный монитор\n")
+
+cpu = psutil.cpu_percent(1)
+print("Загрузка CPU:", cpu, "%")
+
+ram = psutil.virtual_memory()
+print("Использовано RAM:", ram.percent, "%")
+
+disk = psutil.disk_usage("/")
+print("Загрузка диска:", disk.percent, "%")
