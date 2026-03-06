@@ -1,0 +1,84 @@
+import requests
+import json
+
+url = "https://www.cbr-xml-daily.ru/daily_json.js"
+save_file = "save.json"
+
+try:
+    with open(save_file, "r") as f:
+        groups = json.load(f)
+except:
+    groups = {}
+
+def load_rates():
+    r = requests.get(url)
+    data = r.json()
+    return data["Valute"]
+
+def show_all():
+    rates = load_rates()
+    for code in rates:
+        print(code, "-", rates[code]["Value"])
+
+def show_one():
+    code = input("Введите код валюты: ").upper()
+    rates = load_rates()
+
+    if code in rates:
+        print(code, "-", rates[code]["Value"])
+    else:
+        print("Нет такой валюты")
+
+def create_group():
+    name = input("Название группы: ")
+    groups[name] = []
+    print("Группа создана")
+
+def add_currency():
+    name = input("Название группы: ")
+    code = input("Код валюты: ").upper()
+
+    if name in groups:
+        groups[name].append(code)
+
+def remove_currency():
+    name = input("Название группы: ")
+    code = input("Код валюты: ").upper()
+
+    if name in groups:
+        if code in groups[name]:
+            groups[name].remove(code)
+
+def show_groups():
+    print(groups)
+
+def save():
+    with open(save_file, "w") as f:
+        json.dump(groups, f)
+
+while True:
+    print("\n1 - Все валюты")
+    print("2 - Валюта по коду")
+    print("3 - Создать группу")
+    print("4 - Добавить валюту в группу")
+    print("5 - Удалить валюту из группы")
+    print("6 - Показать группы")
+    print("0 - Выход")
+
+    choice = input("Выберите: ")
+
+    if choice == "1":
+        show_all()
+    elif choice == "2":
+        show_one()
+    elif choice == "3":
+        create_group()
+    elif choice == "4":
+        add_currency()
+    elif choice == "5":
+        remove_currency()
+    elif choice == "6":
+        show_groups()
+    elif choice == "0":
+        save()
+        break
